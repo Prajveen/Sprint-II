@@ -1,5 +1,7 @@
 package com.capgemini.pecunia.entity;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,7 +19,7 @@ public class ChequeTransactions {
 	@Column(length = 8)
 	private int transactionID;
 	@Column(length = 20)
-	private String transactionDate;
+	private Date transactionDate;
 	@Column(length = 10)
 	private String transactionType;
 	@Column(length = 6)
@@ -35,17 +37,17 @@ public class ChequeTransactions {
 	@Column(length=10)
 	private String Ifsc;
 	@Column(length = 10)
-	private String issueDate;
+	private Date issueDate;
 	public int getTransactionID() {
 		return transactionID;
 	}
 	public void setTransactionID(int transactionID) {
 		this.transactionID = transactionID;
 	}
-	public String getTransactionDate() {
+	public Date getTransactionDate() {
 		return transactionDate;
 	}
-	public void setTransactionDate(String transactionDate) {
+	public void setTransactionDate(Date transactionDate) {
 		this.transactionDate = transactionDate;
 	}
 	public String getTransactionType() {
@@ -96,12 +98,13 @@ public class ChequeTransactions {
 	public void setIfsc(String ifsc) {
 		Ifsc = ifsc;
 	}
-	public String getIssueDate() {
+	public Date getIssueDate() {
 		return issueDate;
 	}
-	public void setIssueDate(String issueDate) {
+	public void setIssueDate(Date issueDate) {
 		this.issueDate = issueDate;
 	}
+	
 	
 	
 	

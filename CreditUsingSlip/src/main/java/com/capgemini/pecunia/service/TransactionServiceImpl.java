@@ -1,7 +1,5 @@
 package com.capgemini.pecunia.service;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -28,7 +26,6 @@ public class TransactionServiceImpl implements TransactionService {
 	
 
 	RestTemplate restTemplate = new RestTemplate();
-	DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
 	Date dateobj = new Date();
 	Calendar calobj = Calendar.getInstance();
 	
@@ -48,7 +45,7 @@ public class TransactionServiceImpl implements TransactionService {
 		}
 		else 
 		{
-			credit.setTransactionDate(df.format(calobj.getTime()));
+			credit.setTransactionDate((calobj.getTime()));
 			dao.save(credit);
 			double amount=account.getBalance();
 			double payeenewbalance=amount+credit.getAmount();

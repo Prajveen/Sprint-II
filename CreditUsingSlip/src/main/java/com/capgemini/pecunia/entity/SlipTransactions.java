@@ -1,4 +1,6 @@
 package com.capgemini.pecunia.entity;
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,7 +18,8 @@ public class SlipTransactions {
 	@Column(length = 8)
 	private Long transactionID;
 	@Column(length = 10)
-	private String transactionDate;
+	private Date transactionDate;
+	@Column(length = 10)
 	private String transactionType;
 	@Column(length = 12)
 	private String accountNo;
@@ -28,10 +31,10 @@ public class SlipTransactions {
 	public void setTransactionID(Long transactionID) {
 		this.transactionID = transactionID;
 	}
-	public String getTransactionDate() {
+	public Date getTransactionDate() {
 		return transactionDate;
 	}
-	public void setTransactionDate(String transactionDate) {
+	public void setTransactionDate(Date transactionDate) {
 		this.transactionDate = transactionDate;
 	}
 	public String getTransactionType() {
