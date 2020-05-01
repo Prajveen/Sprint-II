@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.capgemini.pecunia.entity.Account;
 import com.capgemini.pecunia.exceptions.Account_NotFoundException;
-import com.capgemini.pecunia.service.AccountServiceImpl;
+import com.capgemini.pecunia.service.AccountService;
 
 @RestController
 @RequestMapping("/balance")
@@ -23,7 +23,7 @@ import com.capgemini.pecunia.service.AccountServiceImpl;
 public class AccountController {
 
 	@Autowired
-	private AccountServiceImpl service;
+	private AccountService service;
 
 
 	@GetMapping("/getbalance/{accountID}")

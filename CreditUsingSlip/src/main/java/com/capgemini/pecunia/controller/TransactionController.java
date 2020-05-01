@@ -12,7 +12,7 @@ import com.capgemini.pecunia.entity.Account;
 import com.capgemini.pecunia.entity.SlipTransactions;
 import com.capgemini.pecunia.exceptions.Account_NotFoundException;
 import com.capgemini.pecunia.exceptions.Zero_balance_Exception;
-import com.capgemini.pecunia.service.TransactionServiceImpl;
+import com.capgemini.pecunia.service.TransactionService;
 
 @RestController
 @RequestMapping("/credit-using-slip")
@@ -20,7 +20,7 @@ import com.capgemini.pecunia.service.TransactionServiceImpl;
 public class TransactionController {
 
 	@Autowired
-	private TransactionServiceImpl service;
+	private TransactionService service;
 
 
 	@PutMapping("/credit-amount")
@@ -36,6 +36,7 @@ public class TransactionController {
 				ResponseEntity< String> response = new ResponseEntity<String>(service.updateBalance(balance),HttpStatus.OK);
 				return response;
 			}
+		
 		
 		
 		

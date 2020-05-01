@@ -9,18 +9,18 @@ import javax.persistence.Table;
 @Table(name="LoginDetails")	
 public class LoginDetails {
 	@Id
-	@Column(length=12)
-	private String accountID;
+	@Column(length=8)
+	private String employeeID;
 	@Column(length=25)
 	private String username;
 	@Column(length=10)
 	private String password;
 	
-	public String getAccountID() {
-		return accountID;
+	public String getEmployeeID() {
+		return employeeID;
 	}
-	public void setAccountID(String accountID) {
-		this.accountID = accountID;
+	public void setEmployeeID(String employeeID) {
+		this.employeeID = employeeID;
 	}
 	public String getUsername() {
 		return username;

@@ -13,7 +13,7 @@ import com.capgemini.pecunia.entity.Account;
 import com.capgemini.pecunia.entity.ChequeTransactions;
 import com.capgemini.pecunia.exceptions.Account_NotFoundException;
 import com.capgemini.pecunia.exceptions.Zero_balance_Exception;
-import com.capgemini.pecunia.service.TransactionServiceImpl;
+import com.capgemini.pecunia.service.TransactionService;
 
 @RestController
 @RequestMapping("/debit-using-cheque")
@@ -21,7 +21,7 @@ import com.capgemini.pecunia.service.TransactionServiceImpl;
 public class TransactionController {
 
 	@Autowired
-	private TransactionServiceImpl service;
+	private TransactionService service;
 
 	RestTemplate restTemplate = new RestTemplate();
 	

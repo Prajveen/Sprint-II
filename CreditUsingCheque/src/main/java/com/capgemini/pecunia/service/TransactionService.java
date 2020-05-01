@@ -13,4 +13,7 @@ public interface TransactionService {
 
 	String updateBalance(Account balance) throws Account_NotFoundException;
 
+
+	Account getAccountbyID(String accountID);
+
 }

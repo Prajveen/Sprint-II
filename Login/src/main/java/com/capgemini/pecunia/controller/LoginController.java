@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.capgemini.pecunia.entity.LoginDetails;
 import com.capgemini.pecunia.exceptions.User_NotFoundException;
-import com.capgemini.pecunia.service.LoginServiceImpl;
+import com.capgemini.pecunia.service.LoginService;
 
 @RestController
 @RequestMapping("/login")
@@ -19,7 +19,7 @@ import com.capgemini.pecunia.service.LoginServiceImpl;
 public class LoginController {
 
 	@Autowired
-	private LoginServiceImpl service;
+	private LoginService service;
 
 	@GetMapping("/validate/{username}/{password}")
 	public ResponseEntity<LoginDetails> validateEmail(@PathVariable("username") String username,@PathVariable("password") String password ) throws User_NotFoundException{

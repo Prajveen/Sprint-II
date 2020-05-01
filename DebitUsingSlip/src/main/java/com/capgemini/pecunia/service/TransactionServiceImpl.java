@@ -22,7 +22,7 @@ public class TransactionServiceImpl implements TransactionService {
 	@Autowired
 	private TransactionRepository dao;
 	@Autowired
-	private TransactionDao rep;
+	private TransactionDao repository;
 
 	RestTemplate restTemplate = new RestTemplate();
 	Date dateobj = new Date();
@@ -31,19 +31,7 @@ public class TransactionServiceImpl implements TransactionService {
 	@Override
 	public String debitUsingSlip(SlipTransactions debit) throws Zero_balance_Exception, Account_NotFoundException {
 
-		String getAccountUrl="http://localhost:1810/balance/getAccountbyID/"+debit.getAccountNo();
-		Account account= restTemplate.getForObject(getAccountUrl, Account.class);
-		
-		if(account== null)
-		{
-			throw new Zero_balance_Exception("Dear Account holder,there is no bank account with "+debit.getAccountNo()+" ");
-		}
-		else  if(account.getBalance()==null)
-		{
-			throw new Zero_balance_Exception("Dear Account holder, your bank account with "+debit.getAccountNo()+" has insufficient balance to debit the required amount....!");
-		}
-		else 
-		{	
+		Account account= getAccountbyID(debit.getAccountNo());
 			debit.setTransactionDate((calobj.getTime()));
 			dao.save(debit);
 			double newbalance=account.getBalance()-debit.getAmount();
@@ -51,25 +39,20 @@ public class TransactionServiceImpl implements TransactionService {
 			updateAccount.setAccountID(debit.getAccountNo());
 			updateAccount.setBalance(newbalance);
 			updateBalance(updateAccount);
-		}
 		return "transaction succesfull ";	
 	}
 
 	
 	@Override
 	public String updateBalance(Account balance) throws Account_NotFoundException {
-		String getAccountUrl="http://localhost:1810/balance/getAccountbyID/"+balance.getAccountID();
-		Account account= restTemplate.getForObject(getAccountUrl, Account.class);
-		
-		if(account==null)
-		{
-			throw new Account_NotFoundException("account with "+balance.getAccountID()+" doesn't exist....!");
-		}
-		else
-		{
-		rep.save(balance);
-		}
+			repository.save(balance);
 		return "updated successfully";
 	}
 
+
+
+	@Override
+	public Account getAccountbyID(String accountID) {
+		return repository.getAccountbyID(accountID);
+	}
 }

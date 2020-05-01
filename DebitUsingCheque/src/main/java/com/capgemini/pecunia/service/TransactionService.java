@@ -12,4 +12,7 @@ public interface TransactionService {
 
 	String updateBalance(Account balance);
 
+
+	Account getAccountbyID(String accountID);
+
 }
