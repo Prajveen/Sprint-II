@@ -18,7 +18,7 @@ public class ChequeTransactions {
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="seq")
 	@Column(length = 8)
 	private int transactionID;
-	@Column(length = 20)
+	@Column(length = 15)
 	private Date transactionDate;
 	@Column(length = 10)
 	private String transactionType;
