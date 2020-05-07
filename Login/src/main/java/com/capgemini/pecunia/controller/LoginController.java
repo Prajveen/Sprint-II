@@ -23,10 +23,15 @@ public class LoginController {
 
 	@GetMapping("/validate/{username}/{password}")
 	public ResponseEntity<LoginDetails> validateEmail(@PathVariable("username") String username,@PathVariable("password") String password ) throws UserNotFoundException{
-		LoginDetails det=service.validateEmail(username,password);
-		ResponseEntity<LoginDetails> response= new ResponseEntity<LoginDetails>(det,HttpStatus.OK);		
-		return response;		
-	
-		
+		LoginDetails details=service.validateEmail(username,password);
+		if(details==null) {
+			throw new UserNotFoundException("no user found");
+		}
+		else {
+			ResponseEntity<LoginDetails> response= new ResponseEntity<LoginDetails>(details,HttpStatus.OK);		
+			return response;		
+
+		}
 	}
+
 }

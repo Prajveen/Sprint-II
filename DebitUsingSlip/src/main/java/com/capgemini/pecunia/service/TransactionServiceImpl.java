@@ -36,26 +36,35 @@ public class TransactionServiceImpl implements TransactionService {
 	public String debitUsingSlip(SlipTransactions debit)  {
 
 		Account account= getAccountbyID(debit.getAccountNo());
-		debit.setTransactionDate(date);
-		dao.save(debit);
 		
+		if(account.getAmount()>=debit.getAmount())
+		{
+			debit.setTransactionDate(date);
+			dao.save(debit);
+			
 
-		transaction.setAccountId(debit.getAccountNo());
-		transaction.setTransAmount(debit.getAmount());
-		transaction.setTransDate(date);
-		transaction.setTransFrom(debit.getAccountNo());
-		transaction.setTransId(debit.getTransactionID());
-		transaction.setTransTo("self");
-		transaction.setTransType(debit.getTransactionType());
-		transac.save(transaction);
+			transaction.setAccountId(debit.getAccountNo());
+			transaction.setTransAmount(debit.getAmount());
+			transaction.setTransDate(date);
+			transaction.setTransFrom(debit.getAccountNo());
+			transaction.setTransId(debit.getTransactionID());
+			transaction.setTransTo("self");
+			transaction.setTransType(debit.getTransactionType());
+			transac.save(transaction);
 
+			
+			double newbalance=account.getAmount()-debit.getAmount();
+			Account updateAccount=new Account();
+			updateAccount.setAccountId(debit.getAccountNo());
+			updateAccount.setAmount(newbalance);
+			updateBalance(updateAccount);
+			return "transaction succesfull";	
+		}
+		else
+		{
+			return "Insufficient balance";	
+		}
 		
-		double newbalance=account.getAmount()-debit.getAmount();
-		Account updateAccount=new Account();
-		updateAccount.setAccountId(debit.getAccountNo());
-		updateAccount.setAmount(newbalance);
-		updateBalance(updateAccount);
-		return "transaction succesfull ";	
 	}
 
 

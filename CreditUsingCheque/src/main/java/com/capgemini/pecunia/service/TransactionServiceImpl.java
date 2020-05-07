@@ -40,36 +40,45 @@ public class TransactionServiceImpl implements TransactionService {
 
 		Account payeeaccount= getAccountbyID(credit.getPayeeAccountNo());
 		Account recipientaccount= getAccountbyID(credit.getRecipientAccountNo());
+		
+		if(payeeaccount.getAmount()>=credit.getAmount())
+		{
 
-		credit.setTransactionDate(date);
-		credit.setChequeID(getRandomDoubleBetweenRange(200000,299999));
-		dao.save(credit);
-		
-		transaction.setAccountId(credit.getPayeeAccountNo());
-		transaction.setTransAmount(credit.getAmount());
-		transaction.setTransDate(date);
-		transaction.setTransTo(credit.getRecipientAccountNo());
-		transaction.setTransFrom(credit.getPayeeAccountNo());
-		transaction.setTransType(credit.getTransactionType());
-		transaction.setTransId(credit.getTransactionID());
-		transac.save(transaction);
-		
-		double payeeamount=payeeaccount.getAmount();
-		double recipientamount=recipientaccount.getAmount();
-		
-		double payeenewbalance=payeeamount-credit.getAmount();
-		Account updateAccount=new Account();
-		updateAccount.setAccountId(credit.getPayeeAccountNo());
-		updateAccount.setAmount(payeenewbalance);
-		updateBalance(updateAccount);
-		
-		double recipientnewbalance=recipientamount+credit.getAmount();
-		Account updateAccount1=new Account();
-		updateAccount1.setAccountId(credit.getRecipientAccountNo());
-		updateAccount1.setAmount(recipientnewbalance);
-		updateBalance(updateAccount1);
+			credit.setTransactionDate(date);
+			credit.setChequeID(getRandomDoubleBetweenRange(200000,299999));
+			dao.save(credit);
+			
+			transaction.setAccountId(credit.getPayeeAccountNo());
+			transaction.setTransAmount(credit.getAmount());
+			transaction.setTransDate(date);
+			transaction.setTransTo(credit.getRecipientAccountNo());
+			transaction.setTransFrom(credit.getPayeeAccountNo());
+			transaction.setTransType(credit.getTransactionType());
+			transaction.setTransId(credit.getTransactionID());
+			transac.save(transaction);
+			
+			double payeeamount=payeeaccount.getAmount();
+			double recipientamount=recipientaccount.getAmount();
+			
+			double payeenewbalance=payeeamount-credit.getAmount();
+			Account updateAccount=new Account();
+			updateAccount.setAccountId(credit.getPayeeAccountNo());
+			updateAccount.setAmount(payeenewbalance);
+			updateBalance(updateAccount);
+			
+			double recipientnewbalance=recipientamount+credit.getAmount();
+			Account updateAccount1=new Account();
+			updateAccount1.setAccountId(credit.getRecipientAccountNo());
+			updateAccount1.setAmount(recipientnewbalance);
+			updateBalance(updateAccount1);
 
-		return "transaction succesfull ";	
+			return "transaction succesfull ";	
+		}
+		else
+		{
+			return "Insufficient balance";	
+		}
+
 	}
 
 

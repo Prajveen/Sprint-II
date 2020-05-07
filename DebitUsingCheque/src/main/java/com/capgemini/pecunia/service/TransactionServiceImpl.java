@@ -37,29 +37,38 @@ public class TransactionServiceImpl implements TransactionService {
 
 		
 			Account account= getAccountbyID(debit.getPayeeAccountNo());
-		
-			debit.setTransactionDate(date);
-			debit.setChequeID(getRandomDoubleBetweenRange(200000,29999));
-			dao.save(debit);
 			
+			if(account.getAmount()>=debit.getAmount())
+			{
 
-			transaction.setAccountId(debit.getPayeeAccountNo());
-			transaction.setTransAmount(debit.getAmount());
-			transaction.setTransDate(date);
-			transaction.setTransFrom(debit.getPayeeAccountNo());
-			transaction.setTransId(debit.getTransactionID());
-			transaction.setTransTo(debit.getRecipientAccountNo());
-			transaction.setTransType(debit.getTransactionType());
-			transac.save(transaction);
-			
-			
-			double newbalance=account.getAmount()-debit.getAmount();
-			Account updateAccount=new Account();
-			updateAccount.setAccountId(debit.getPayeeAccountNo());
-			updateAccount.setAmount(newbalance);
-			updateBalance(updateAccount);	
-			return "transaction succesfull ";	
-		
+				debit.setTransactionDate(date);
+				debit.setChequeID(getRandomDoubleBetweenRange(200000,29999));
+				dao.save(debit);
+				
+
+				transaction.setAccountId(debit.getPayeeAccountNo());
+				transaction.setTransAmount(debit.getAmount());
+				transaction.setTransDate(date);
+				transaction.setTransFrom(debit.getPayeeAccountNo());
+				transaction.setTransId(debit.getTransactionID());
+				transaction.setTransTo(debit.getRecipientAccountNo());
+				transaction.setTransType(debit.getTransactionType());
+				transac.save(transaction);
+				
+				
+				double newbalance=account.getAmount()-debit.getAmount();
+				Account updateAccount=new Account();
+				updateAccount.setAccountId(debit.getPayeeAccountNo());
+				updateAccount.setAmount(newbalance);
+				updateBalance(updateAccount);	
+				return "transaction succesfull";	
+
+			}
+			else
+			{
+				return "Insufficient balance";	
+			}
+				
 	}
 
 

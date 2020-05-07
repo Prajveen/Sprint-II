@@ -12,6 +12,7 @@ public class MyControllerAdvice extends ResponseEntityExceptionHandler{
 		ErrorMessage exceptionResponse = new ErrorMessage(ex.getMessage(), "Something went wrong");
 		return new ResponseEntity<ErrorMessage>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
+	
 
 class ErrorMessage{
 	private String message;

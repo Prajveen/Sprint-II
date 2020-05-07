@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import com.capgemini.pecunia.dao.LoginDAO;
 import com.capgemini.pecunia.entity.LoginDetails;
-import com.capgemini.pecunia.exceptions.UserNotFoundException;
 @Service
 @Transactional
 public class LoginServiceImpl implements LoginService {
@@ -16,7 +15,7 @@ public class LoginServiceImpl implements LoginService {
 	private LoginDAO dao;
 	
 	@Override
-	public LoginDetails validateEmail(String username, String password) throws UserNotFoundException {
+	public LoginDetails validateEmail(String username, String password)  {
 		return dao.validateEmail(username,password);
 	}
 
