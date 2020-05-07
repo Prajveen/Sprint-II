@@ -1,51 +1,67 @@
 package com.capgemini.pecunia.service;
 
-import java.util.Calendar;
-import java.util.Date;
+
+import java.sql.Date;
 
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
-import com.capgemini.pecunia.dao.TransactionDao;
-import com.capgemini.pecunia.dao.TransactionRepository;
+import com.capgemini.pecunia.dao.SlipTransactionsDao;
+import com.capgemini.pecunia.dao.TransactionsDao;
+import com.capgemini.pecunia.dao.UpdateBalanceDao;
 import com.capgemini.pecunia.entity.Account;
 import com.capgemini.pecunia.entity.SlipTransactions;
-import com.capgemini.pecunia.exceptions.Account_NotFoundException;
-import com.capgemini.pecunia.exceptions.Zero_balance_Exception;
+import com.capgemini.pecunia.entity.Transactions;
 @Service
 @Transactional
 public class TransactionServiceImpl implements TransactionService {
 
 	@Autowired
-	private TransactionRepository dao;
+	private SlipTransactionsDao dao;
 	@Autowired
-	private TransactionDao repository;
+	private UpdateBalanceDao repository;
+	@Autowired
+	private TransactionsDao transac;
 
-	RestTemplate restTemplate = new RestTemplate();
-	Date dateobj = new Date();
-	Calendar calobj = Calendar.getInstance();
-	
+
+	Transactions transaction=new Transactions();
+
+	long millis=System.currentTimeMillis();  
+	Date date=new Date(millis); 
+
+
 	@Override
-	public String debitUsingSlip(SlipTransactions debit) throws Zero_balance_Exception, Account_NotFoundException {
+	public String debitUsingSlip(SlipTransactions debit)  {
 
 		Account account= getAccountbyID(debit.getAccountNo());
-			debit.setTransactionDate((calobj.getTime()));
-			dao.save(debit);
-			double newbalance=account.getBalance()-debit.getAmount();
-			Account updateAccount=new Account();
-			updateAccount.setAccountID(debit.getAccountNo());
-			updateAccount.setBalance(newbalance);
-			updateBalance(updateAccount);
+		debit.setTransactionDate(date);
+		dao.save(debit);
+		
+
+		transaction.setAccountId(debit.getAccountNo());
+		transaction.setTransAmount(debit.getAmount());
+		transaction.setTransDate(date);
+		transaction.setTransFrom(debit.getAccountNo());
+		transaction.setTransId(debit.getTransactionID());
+		transaction.setTransTo("self");
+		transaction.setTransType(debit.getTransactionType());
+		transac.save(transaction);
+
+		
+		double newbalance=account.getAmount()-debit.getAmount();
+		Account updateAccount=new Account();
+		updateAccount.setAccountId(debit.getAccountNo());
+		updateAccount.setAmount(newbalance);
+		updateBalance(updateAccount);
 		return "transaction succesfull ";	
 	}
 
-	
+
 	@Override
-	public String updateBalance(Account balance) throws Account_NotFoundException {
-			repository.save(balance);
+	public String updateBalance(Account balance)  {
+		repository.save(balance);
 		return "updated successfully";
 	}
 

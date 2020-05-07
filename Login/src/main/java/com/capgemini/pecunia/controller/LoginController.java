@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.capgemini.pecunia.entity.LoginDetails;
-import com.capgemini.pecunia.exceptions.User_NotFoundException;
+import com.capgemini.pecunia.exceptions.UserNotFoundException;
 import com.capgemini.pecunia.service.LoginService;
 
 @RestController
@@ -22,7 +22,7 @@ public class LoginController {
 	private LoginService service;
 
 	@GetMapping("/validate/{username}/{password}")
-	public ResponseEntity<LoginDetails> validateEmail(@PathVariable("username") String username,@PathVariable("password") String password ) throws User_NotFoundException{
+	public ResponseEntity<LoginDetails> validateEmail(@PathVariable("username") String username,@PathVariable("password") String password ) throws UserNotFoundException{
 		LoginDetails det=service.validateEmail(username,password);
 		ResponseEntity<LoginDetails> response= new ResponseEntity<LoginDetails>(det,HttpStatus.OK);		
 		return response;		

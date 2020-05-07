@@ -12,7 +12,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="ChequeTransactions")
-@SequenceGenerator(name="seq", initialValue=10000000, allocationSize=1)
+@SequenceGenerator(name="seq", initialValue=1000, allocationSize=1)
 public class ChequeTransactions {
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="seq")

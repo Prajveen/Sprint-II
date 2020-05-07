@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.capgemini.pecunia.entity.Account;
 import com.capgemini.pecunia.entity.SlipTransactions;
-import com.capgemini.pecunia.exceptions.Account_NotFoundException;
-import com.capgemini.pecunia.exceptions.Zero_balance_Exception;
 import com.capgemini.pecunia.service.TransactionService;
 
 @RestController
@@ -25,14 +23,14 @@ public class TransactionController {
 	
 
 	@PutMapping("/debit-amount")
-	public ResponseEntity<String> debitUsingCheque(@RequestBody SlipTransactions Debit) throws Zero_balance_Exception, Account_NotFoundException {
+	public ResponseEntity<String> debitUsingCheque(@RequestBody SlipTransactions Debit)  {
 			ResponseEntity< String> details = new ResponseEntity<String>(service.debitUsingSlip(Debit),HttpStatus.OK);
 			return details;
 		}
 	
 	
 		@PutMapping("/updateBalance")
-		public ResponseEntity<String> updateBalance(@RequestBody Account balance) throws Account_NotFoundException{
+		public ResponseEntity<String> updateBalance(@RequestBody Account balance) {
 				ResponseEntity< String> response = new ResponseEntity<String>(service.updateBalance(balance),HttpStatus.OK);
 				return response;
 			}

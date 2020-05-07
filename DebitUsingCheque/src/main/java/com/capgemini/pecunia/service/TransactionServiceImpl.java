@@ -1,45 +1,62 @@
 package com.capgemini.pecunia.service;
 
-import java.util.Calendar;
-import java.util.Date;
+
+import java.sql.Date;
 
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.capgemini.pecunia.dao.TransactionDao;
-import com.capgemini.pecunia.dao.TransactionRepository;
+import com.capgemini.pecunia.dao.ChequeTransactionsDao;
+import com.capgemini.pecunia.dao.TransactionsDao;
+import com.capgemini.pecunia.dao.UpdateBalanceDao;
 import com.capgemini.pecunia.entity.Account;
 import com.capgemini.pecunia.entity.ChequeTransactions;
-import com.capgemini.pecunia.exceptions.Zero_balance_Exception;
+import com.capgemini.pecunia.entity.Transactions;
 @Service
 @Transactional
 public class TransactionServiceImpl implements TransactionService {
 
 	@Autowired
-	private TransactionRepository dao;
+	private ChequeTransactionsDao dao;
 	@Autowired
-	private TransactionDao repository;
+	private UpdateBalanceDao repository;
+	@Autowired
+	private TransactionsDao transac;
 
-	Date dateobj = new Date();
-	Calendar calobj = Calendar.getInstance();
 
+	Transactions transaction=new Transactions();
+	
+	long millis=System.currentTimeMillis();  
+	Date date=new Date(millis); 
+	
 
 	@Override
-	public String debitUsingCheque(ChequeTransactions debit) throws Zero_balance_Exception {
+	public String debitUsingCheque(ChequeTransactions debit) {
 
 		
 			Account account= getAccountbyID(debit.getPayeeAccountNo());
 		
-			debit.setTransactionDate((calobj.getTime()));
+			debit.setTransactionDate(date);
 			debit.setChequeID(getRandomDoubleBetweenRange(200000,29999));
 			dao.save(debit);
 			
-			double newbalance=account.getBalance()-debit.getAmount();
+
+			transaction.setAccountId(debit.getPayeeAccountNo());
+			transaction.setTransAmount(debit.getAmount());
+			transaction.setTransDate(date);
+			transaction.setTransFrom(debit.getPayeeAccountNo());
+			transaction.setTransId(debit.getTransactionID());
+			transaction.setTransTo(debit.getRecipientAccountNo());
+			transaction.setTransType(debit.getTransactionType());
+			transac.save(transaction);
+			
+			
+			double newbalance=account.getAmount()-debit.getAmount();
 			Account updateAccount=new Account();
-			updateAccount.setAccountID(debit.getPayeeAccountNo());
-			updateAccount.setBalance(newbalance);
+			updateAccount.setAccountId(debit.getPayeeAccountNo());
+			updateAccount.setAmount(newbalance);
 			updateBalance(updateAccount);	
 			return "transaction succesfull ";	
 		

@@ -11,12 +11,12 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="SlipTransactions")
-@SequenceGenerator(name="seq", initialValue=20000000, allocationSize=1)
+@SequenceGenerator(name="seq", initialValue=2000, allocationSize=1)
 public class SlipTransactions {
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="seq")
 	@Column(length = 8)
-	private Long transactionID;
+	private int transactionID;
 	@Column(length = 10)
 	private Date transactionDate;
 	@Column(length = 10)
@@ -25,10 +25,10 @@ public class SlipTransactions {
 	private String accountNo;
 	@Column(length=12)
 	private double amount;
-	public Long getTransactionID() {
+	public int getTransactionID() {
 		return transactionID;
 	}
-	public void setTransactionID(Long transactionID) {
+	public void setTransactionID(int transactionID) {
 		this.transactionID = transactionID;
 	}
 	public Date getTransactionDate() {

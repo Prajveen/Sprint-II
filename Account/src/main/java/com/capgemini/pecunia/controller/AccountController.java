@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.capgemini.pecunia.entity.Account;
-import com.capgemini.pecunia.exceptions.Account_NotFoundException;
+import com.capgemini.pecunia.exceptions.AccountNotFoundException;
 import com.capgemini.pecunia.service.AccountService;
 
 @RestController
@@ -32,32 +32,18 @@ public class AccountController {
 		ResponseEntity<Double> response= new ResponseEntity<Double>(balance,HttpStatus.OK);		
 		return response;		
 	}
-	
+
 	@GetMapping("/getAccountbyID/{accountID}")
-	public Optional<Account> getAccountbyID(@PathVariable String accountID) throws Account_NotFoundException {
-		Optional<Account> result=service.getAccountbyID(accountID);
-		if(result== null)
-		{
-			throw new Account_NotFoundException("Employee with "+accountID+" doesn't exist....!");
-		}
-		else
-		{ 
-			return result;
-		}
+	public Optional<Account> getAccountbyID(@PathVariable String accountID) throws AccountNotFoundException {
+		return service.getAccountbyID(accountID);
 	}
-	
+
 	@PutMapping("/updatebalance")
-	public ResponseEntity<String> updatebalance(@RequestBody Account balance) throws Account_NotFoundException{
-		Optional<Account> check=service.getAccountbyID(balance.getAccountID());
-		if(check==null)
-		{
-			throw new Account_NotFoundException("account with "+balance.getAccountID()+" doesn't exist....!");
-		}
-		else
-		{
-			ResponseEntity< String> response = new ResponseEntity<String>(service.updatebalance(balance),HttpStatus.OK);
-			return response;
-		}
+	public ResponseEntity<String> updatebalance(@RequestBody Account balance) throws AccountNotFoundException{
+		service.getAccountbyID(balance.getAccountId());
+		ResponseEntity< String> response = new ResponseEntity<String>(service.updatebalance(balance),HttpStatus.OK);
+		return response;
+
 	}
-	
+
 }

@@ -1,58 +1,72 @@
 package com.capgemini.pecunia.service;
 
-import java.util.Calendar;
-import java.util.Date;
+
+
+import java.sql.Date;
 
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.capgemini.pecunia.dao.TransactionDao;
-import com.capgemini.pecunia.dao.TransactionRepository;
+import com.capgemini.pecunia.dao.ChequeTransactionsDao;
+import com.capgemini.pecunia.dao.TransactionsDao;
+import com.capgemini.pecunia.dao.UpdateBalanceDao;
 import com.capgemini.pecunia.entity.Account;
 import com.capgemini.pecunia.entity.ChequeTransactions;
-import com.capgemini.pecunia.exceptions.Account_NotFoundException;
-import com.capgemini.pecunia.exceptions.Zero_balance_Exception;
+import com.capgemini.pecunia.entity.Transactions;
 @Service
 @Transactional
 public class TransactionServiceImpl implements TransactionService {
 
 	@Autowired
-	private TransactionRepository dao;
+	private ChequeTransactionsDao dao;
 	@Autowired
-	private TransactionDao repository;
+	private UpdateBalanceDao repository;
+	@Autowired
+	private TransactionsDao transac;
 
+
+	Transactions transaction=new Transactions();
 	
-	Date dateobj = new Date();
-	Calendar calobj = Calendar.getInstance();
-
-
+	long millis=System.currentTimeMillis();  
+	Date date=new Date(millis); 
+	
+	
 
 	@SuppressWarnings("unused")
 	@Override
-	public String creditUsingCheque(ChequeTransactions credit) throws Zero_balance_Exception, Account_NotFoundException {
+	public String creditUsingCheque(ChequeTransactions credit) {
 
 		Account payeeaccount= getAccountbyID(credit.getPayeeAccountNo());
 		Account recipientaccount= getAccountbyID(credit.getRecipientAccountNo());
 
-		credit.setTransactionDate((calobj.getTime()));
+		credit.setTransactionDate(date);
 		credit.setChequeID(getRandomDoubleBetweenRange(200000,299999));
 		dao.save(credit);
 		
-		double payeeamount=payeeaccount.getBalance();
-		double recipientamount=recipientaccount.getBalance();
+		transaction.setAccountId(credit.getPayeeAccountNo());
+		transaction.setTransAmount(credit.getAmount());
+		transaction.setTransDate(date);
+		transaction.setTransTo(credit.getRecipientAccountNo());
+		transaction.setTransFrom(credit.getPayeeAccountNo());
+		transaction.setTransType(credit.getTransactionType());
+		transaction.setTransId(credit.getTransactionID());
+		transac.save(transaction);
+		
+		double payeeamount=payeeaccount.getAmount();
+		double recipientamount=recipientaccount.getAmount();
 		
 		double payeenewbalance=payeeamount-credit.getAmount();
 		Account updateAccount=new Account();
-		updateAccount.setAccountID(credit.getPayeeAccountNo());
-		updateAccount.setBalance(payeenewbalance);
+		updateAccount.setAccountId(credit.getPayeeAccountNo());
+		updateAccount.setAmount(payeenewbalance);
 		updateBalance(updateAccount);
 		
 		double recipientnewbalance=recipientamount+credit.getAmount();
 		Account updateAccount1=new Account();
-		updateAccount1.setAccountID(credit.getRecipientAccountNo());
-		updateAccount1.setBalance(recipientnewbalance);
+		updateAccount1.setAccountId(credit.getRecipientAccountNo());
+		updateAccount1.setAmount(recipientnewbalance);
 		updateBalance(updateAccount1);
 
 		return "transaction succesfull ";	
@@ -60,7 +74,7 @@ public class TransactionServiceImpl implements TransactionService {
 
 
 	@Override
-	public String updateBalance(Account balance) throws Account_NotFoundException {
+	public String updateBalance(Account balance){
 			repository.save(balance);
 			return "updated successfully";
 	}

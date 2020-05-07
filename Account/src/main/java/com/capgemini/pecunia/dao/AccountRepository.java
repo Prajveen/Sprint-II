@@ -11,10 +11,10 @@ import com.capgemini.pecunia.entity.Account;
 public interface AccountRepository extends JpaRepository<Account, Integer> {
 
 
-	@Query("select balance from Account   where accountID =?1 ")
+	@Query("select amount from Account   where accountId =?1 ")
 	Double getbalance(String accountID);
 	
-	@Query("select f from Account f  where accountID =?1")
+	@Query("select f from Account f  where accountId =?1")
 	Optional<Account> getAccountbyID(String accountID);
 	
 }

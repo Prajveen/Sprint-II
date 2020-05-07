@@ -7,12 +7,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
 import com.capgemini.pecunia.entity.Account;
 import com.capgemini.pecunia.entity.ChequeTransactions;
-import com.capgemini.pecunia.exceptions.Account_NotFoundException;
-import com.capgemini.pecunia.exceptions.Zero_balance_Exception;
 import com.capgemini.pecunia.service.TransactionService;
 
 @RestController
@@ -23,31 +20,21 @@ public class TransactionController {
 	@Autowired
 	private TransactionService service;
 
-	RestTemplate restTemplate = new RestTemplate();
+	
 	
 
 	@PutMapping("/debit-amount")
-	public ResponseEntity<String> debitUsingCheque(@RequestBody ChequeTransactions Debit) throws Zero_balance_Exception, Account_NotFoundException {
+	public ResponseEntity<String> debitUsingCheque(@RequestBody ChequeTransactions Debit)  {
 			ResponseEntity< String> details = new ResponseEntity<String>(service.debitUsingCheque(Debit),HttpStatus.OK);
 			return details;
 		
 	}
 	
 		@PutMapping("/updateBalance")
-		public ResponseEntity<String> updateBalance(@RequestBody Account balance) throws Account_NotFoundException{
-
-			String getAccountUrl="http://localhost:1810/balance/getAccountbyID/"+balance.getAccountID();
-			Account account= restTemplate.getForObject(getAccountUrl, Account.class);
-			
-			if(account==null)
-			{
-				throw new Account_NotFoundException("account with "+balance.getAccountID()+" doesn't exist....!");
-			}
-			else
-			{
+		public ResponseEntity<String> updateBalance(@RequestBody Account balance){
 				ResponseEntity< String> response = new ResponseEntity<String>(service.updateBalance(balance),HttpStatus.OK);
 				return response;
-			}
+			
 		}
 }
 
